@@ -21,8 +21,10 @@ app.use(bodyParser?.json());
 
 app.use("/api", shareHolderRouter);
 
-// Start the server
+// connect database
 connection();
+
+// Start the server
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });

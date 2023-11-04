@@ -1,42 +1,19 @@
 import express from "express";
-import { Shareholder, schema } from "../models/shareHolderModal.js";
+import {
+  getShareDetail,
+  createShareDetails,
+  createShareholders,
+} from "../controllers/index.js";
 
 const router = express?.Router();
 
 // Route to add shareholders to the system
-router.post("/addShareholder", async (req, res) => {
-  try {
-    const isUsernameUnique = await Shareholder.exists({
-      email: req?.body?.email,
-    });
-
-    const { error } = schema.validate(req.body);
-
-    if (error) {
-      return res.status(400).send(error.details[0].message);
-    }
-
-    if (isUsernameUnique) {
-      return res.status(409).json({ error: "email is not unique" });
-    }
-
-    const newShareholder = new Shareholder(req.body); // Create a new Shareholder instance
-
-    const savedUser = await newShareholder?.save();
-    // Save the shareholder to the database
-
-    return res.json({ message: "Shareholder added successfully", savedUser });
-  } catch (error) {
-    res
-      .status(500)
-      .json({ error: "Failed to add shareholder", message: error?.message });
-  }
-});
+router.post("/addShareholder", createShareholders);
 
 // Route to set share details for a shareholder
-router.post("/setShareDetails/:shareholderId", (req, res) => {
-  // Implement setting share details logic here
-});
+router.post("/setShareDetails/:shareholderId", createShareDetails);
+
+router.get("/share/:shareholderId/details", getShareDetail);
 
 // Route to display a summary list of all shareholders
 router.get("/shareholdersSummary", (req, res) => {
