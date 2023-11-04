@@ -11,6 +11,7 @@ export const createShareDetails = async (req, res) => {
 
     // Calculate the total installment amount based on the provided data
     const installmentAmount = annualAmount / installmentsPerYear;
+
     const totalInstallmentAmount =
       installmentAmount * (duration * installmentsPerYear);
 
