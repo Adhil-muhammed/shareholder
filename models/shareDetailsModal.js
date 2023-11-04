@@ -18,7 +18,7 @@ const shareDetailSchema = new mongoose.Schema({
       amount: Number,
     },
   ],
-  totalInstallmentAMount: Number,
+  totalInstallmentAmount: Number,
   // other fields...
 });
 
