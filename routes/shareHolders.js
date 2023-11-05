@@ -20,8 +20,28 @@ router.put("/updateshareDetails/:shareDetailId", updateShareDetails);
 router.get("/share/:shareholderId/details", getShareDetail);
 
 // Route to display a summary list of all shareholders
-router.get("/shareholdersSummary", (req, res) => {
-  // Implement logic to calculate and return summary data
+router.get("/shareholdersSummary", async (req, res) => {
+  // const shareDetail = await ShareDetail.find({
+  //   installments: {
+  //     $elemMatch: { installmentDate: "2000-02-01T00:00:00.000Z" },
+  //   },
+  // });
+  const shareDetail = await ShareDetail.aggregate([
+    {
+      $project: {
+        name: 1,
+        installments: {
+          $filter: {
+            input: "$installments",
+            cond: {
+              $eq: ["$$this.installmentDate", "2000-02-01T00:00:00.000Z"],
+            },
+          },
+        },
+      },
+    },
+  ]);
+  res?.json(shareDetail)?.status(200);
 });
 
 // Route to display details of an individual shareholder

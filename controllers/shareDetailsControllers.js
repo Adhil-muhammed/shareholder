@@ -84,8 +84,8 @@ export const updateShareDetails = async (req, res) => {
       { _id: shareDetailId },
       {
         installments: value?.installments,
-        duratioEndDate: value?.installments,
-        duratioEndDate: moment(instalmentEndDate)?.format(
+        installmentType: value?.installmentType,
+        durationEndDate: moment(instalmentEndDate)?.format(
           "MMMM D, YYYY, h:mm a"
         ),
         updatedAt:

@@ -20,7 +20,7 @@ const shareDetailSchema = new mongoose.Schema({
     },
   ],
   totalInstallmentAmount: Number,
-  duratioEndDate: Date,
+  durationEndDate: Date,
   // other fields...
 });
 
