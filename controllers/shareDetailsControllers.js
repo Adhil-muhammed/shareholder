@@ -60,7 +60,7 @@ export const updateShareDetails = async (req, res) => {
     const currentTime = new Date();
     const shareDetails = await ShareDetail.findOne({ _id: shareDetailId });
 
-    const fixedDate = moment(shareDetails?.startDate, "YYYY-MM-DD");
+    const fixedDate = moment(shareDetails?.startDate);
 
     const instalmentEndDate = fixedDate
       .clone()
@@ -99,8 +99,11 @@ export const updateShareDetails = async (req, res) => {
       {
         installments: value?.installments,
         duratioEndDate: installmentType,
-        duratioEndDate: moment(instalmentEndDate)?.format("YYYY-MM-DD"),
-        updatedAt: value.updatedAt || currentTime,
+        duratioEndDate: moment(instalmentEndDate)?.format(
+          "MMMM D, YYYY, h:mm a"
+        ),
+        updatedAt:
+          moment(value.updatedAt)?.format("MMM D, YYYY, h:mm a") || currentTime,
       },
       { new: true }
     );

@@ -51,19 +51,28 @@ export const createInstallments = (
 };
 
 export const checkDate = (value, helper, shareDetails) => {
-  const dateToCompare = moment(value, "YYYY-MM-DD");
-
-  const fixedDate = moment(shareDetails?.startDate, "YYYY-MM-DD");
-
+  // const dateToCompare = value;
+  const dateToCompare = moment(value);
+  const fixedDate = moment(shareDetails?.startDate, "MM/DD/YYYY");
   const instalmentEndDate = fixedDate
     .clone()
     .add(shareDetails?.duration, "years");
 
+  console.log("instalmentEndDate: ", instalmentEndDate);
+
   if (dateToCompare.isBefore(fixedDate)) {
-    return helper.message(`dateToCompare is before fixedDate${dateToCompare}`);
+    const ErrorMessage = `please select date the between ${
+      shareDetails?.startDate
+    } - ${instalmentEndDate?.format("MM/DD/YYYY")}`;
+
+    return helper.message(ErrorMessage);
   }
   if (dateToCompare.isAfter(instalmentEndDate)) {
-    return helper.message(`dateToCompare is after fixedDate${dateToCompare}`);
+    const ErrorMessage = `please select date the between ${
+      shareDetails?.startDate
+    } - ${instalmentEndDate?.format("MM/DD/YYYY")}`;
+
+    return helper.message(ErrorMessage);
   }
   return value;
 };

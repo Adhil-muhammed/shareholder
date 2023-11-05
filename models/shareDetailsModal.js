@@ -10,7 +10,7 @@ const shareDetailSchema = new mongoose.Schema({
   annualAmount: Number,
   installmentType: String,
   startDate: String,
-  updatedAt: Date,
+  updatedAt: String,
   installmentAmount: Number,
   installments: [
     {
