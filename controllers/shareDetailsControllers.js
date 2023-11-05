@@ -2,6 +2,10 @@ import Joi from "joi";
 import moment from "moment";
 import { ShareDetail, Shareholder } from "../models/index.js";
 import {
+  shareDetailsValidation,
+  updateShareDetailValidation,
+} from "../validations/index.js";
+import {
   checkDate,
   createInstallments,
   validateTotalAmount,
@@ -11,6 +15,7 @@ import {
 export const createShareDetails = async (req, res) => {
   try {
     const { duration, startDate, annualAmount, installmentType } = req.body;
+    const shareDetailvalidationSchema = await shareDetailsValidation();
 
     const installmentsPerYear = getInstallmentsPerYear(installmentType);
 
@@ -29,6 +34,12 @@ export const createShareDetails = async (req, res) => {
 
     const { shareholderId } = req.params;
     const shareholder = await Shareholder.findById(shareholderId);
+    const { error } = shareDetailvalidationSchema.validate(req.body);
+
+    if (error) {
+      const errorMessage = error?.details[0]?.message;
+      return res.status(400).json({ error: errorMessage });
+    }
 
     if (!shareholder) {
       return res.status(404).json({ error: "Shareholder not found" });
@@ -66,26 +77,7 @@ export const updateShareDetails = async (req, res) => {
       .clone()
       .add(shareDetails?.duration, "years");
 
-    const updateSchema = Joi.object({
-      installmentType: Joi.string().equal("custom"),
-      installments: Joi.array()
-        .items(
-          Joi.object({
-            amount: Joi.number().required().messages({
-              "number.base": "Amount must be a valid number",
-              "any.required": "Amount is required",
-            }),
-            installmentDate: Joi.date()?.custom((value, helper) =>
-              checkDate(value, helper, shareDetails)
-            ),
-            installmentNumber: Joi.number(),
-          })
-        )
-        .custom((value, helpers) =>
-          validateTotalAmount(value, helpers, shareDetails)
-        ),
-      updatedAt: Joi.date(),
-    });
+    const updateSchema = updateShareDetailValidation();
 
     const { error, value } = updateSchema.validate(req.body);
 
