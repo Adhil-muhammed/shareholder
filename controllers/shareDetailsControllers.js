@@ -77,7 +77,7 @@ export const updateShareDetails = async (req, res) => {
       .clone()
       .add(shareDetails?.duration, "years");
 
-    const updateSchema = updateShareDetailValidation();
+    const updateSchema = updateShareDetailValidation(shareDetails);
 
     const { error, value } = updateSchema.validate(req.body);
 

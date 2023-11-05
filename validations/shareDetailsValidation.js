@@ -29,7 +29,7 @@ export const shareDetailsValidation = async () => {
   });
 };
 
-export const updateShareDetailValidation = () => {
+export const updateShareDetailValidation = (shareDetails) => {
   return Joi.object({
     installmentType: Joi.string().equal("custom"),
     installments: Joi.array()
