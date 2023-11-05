@@ -60,7 +60,6 @@ export const createShareDetails = async (req, res) => {
 
 export const updateShareDetails = async (req, res) => {
   try {
-    const { installments, installmentType } = req.body;
     const { shareDetailId } = req.params;
 
     const currentTime = new Date();
@@ -85,7 +84,7 @@ export const updateShareDetails = async (req, res) => {
       { _id: shareDetailId },
       {
         installments: value?.installments,
-        duratioEndDate: installmentType,
+        duratioEndDate: value?.installments,
         duratioEndDate: moment(instalmentEndDate)?.format(
           "MMMM D, YYYY, h:mm a"
         ),
