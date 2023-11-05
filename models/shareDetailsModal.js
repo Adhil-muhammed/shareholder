@@ -10,6 +10,7 @@ const shareDetailSchema = new mongoose.Schema({
   annualAmount: Number,
   installmentType: String,
   startDate: String,
+  updatedAt: Date,
   installmentAmount: Number,
   installments: [
     {
@@ -19,6 +20,7 @@ const shareDetailSchema = new mongoose.Schema({
     },
   ],
   totalInstallmentAmount: Number,
+  duratioEndDate: String,
   // other fields...
 });
 

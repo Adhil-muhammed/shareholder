@@ -1,15 +1,19 @@
+import Joi from "joi";
 import moment from "moment";
-import { createInstallments, getInstallmentsPerYear } from "../utils/index.js";
 import { ShareDetail, Shareholder } from "../models/index.js";
+import {
+  checkDate,
+  createInstallments,
+  validateTotalAmount,
+  getInstallmentsPerYear,
+} from "../utils/index.js";
 
 export const createShareDetails = async (req, res) => {
-  // Implement setting share details logic here
   try {
-    const { duration, annualAmount, installmentType, startDate } = req.body;
+    const { duration, startDate, annualAmount, installmentType } = req.body;
 
     const installmentsPerYear = getInstallmentsPerYear(installmentType);
 
-    // Calculate the total installment amount based on the provided data
     const installmentAmount = annualAmount / installmentsPerYear;
 
     const totalInstallmentAmount =
@@ -18,6 +22,7 @@ export const createShareDetails = async (req, res) => {
     const installments = createInstallments(
       duration,
       startDate,
+      installmentType,
       installmentAmount,
       installmentsPerYear
     );
@@ -41,6 +46,66 @@ export const createShareDetails = async (req, res) => {
     });
     const savedDetail = await newShareDetail.save();
     res.status(201).json(savedDetail);
+  } catch (error) {
+    console.error("error: ", error);
+    res.status(500).json({ error: "Server error" });
+  }
+};
+
+export const updateShareDetails = async (req, res) => {
+  try {
+    const { installments, installmentType } = req.body;
+    const { shareDetailId } = req.params;
+
+    const currentTime = new Date();
+    const shareDetails = await ShareDetail.findOne({ _id: shareDetailId });
+
+    const fixedDate = moment(shareDetails?.startDate, "YYYY-MM-DD");
+
+    const instalmentEndDate = fixedDate
+      .clone()
+      .add(shareDetails?.duration, "years");
+
+    const updateSchema = Joi.object({
+      installmentType: Joi.string().equal("custom"),
+      installments: Joi.array()
+        .items(
+          Joi.object({
+            amount: Joi.number().required().messages({
+              "number.base": "Amount must be a valid number",
+              "any.required": "Amount is required",
+            }),
+            installmentDate: Joi.date()?.custom((value, helper) =>
+              checkDate(value, helper, shareDetails)
+            ),
+            installmentNumber: Joi.number(),
+          })
+        )
+        .custom((value, helpers) =>
+          validateTotalAmount(value, helpers, shareDetails)
+        ),
+      updatedAt: Joi.date(),
+    });
+
+    const { error, value } = updateSchema.validate(req.body);
+
+    if (error) {
+      const errorMessage = error?.details[0]?.message;
+      return res.status(400).json({ error: errorMessage });
+    }
+
+    const updatedDetails = await ShareDetail?.findByIdAndUpdate(
+      { _id: shareDetailId },
+      {
+        installments: value?.installments,
+        duratioEndDate: installmentType,
+        duratioEndDate: moment(instalmentEndDate)?.format("YYYY-MM-DD"),
+        updatedAt: value.updatedAt || currentTime,
+      },
+      { new: true }
+    );
+
+    res.status(200).json(updatedDetails);
   } catch (error) {
     console.error("error: ", error);
     res.status(500).json({ error: "Server error" });

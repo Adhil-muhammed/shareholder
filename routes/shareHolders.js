@@ -3,7 +3,9 @@ import {
   getShareDetail,
   createShareDetails,
   createShareholders,
+  updateShareDetails,
 } from "../controllers/index.js";
+import { ShareDetail } from "../models/index.js";
 
 const router = express?.Router();
 
@@ -12,6 +14,8 @@ router.post("/addShareholder", createShareholders);
 
 // Route to set share details for a shareholder
 router.post("/setShareDetails/:shareholderId", createShareDetails);
+
+router.put("/updateshareDetails/:shareDetailId", updateShareDetails);
 
 router.get("/share/:shareholderId/details", getShareDetail);
 
