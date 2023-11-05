@@ -1,16 +1,11 @@
 import Joi from "joi";
 import moment from "moment";
 import { ShareDetail, Shareholder } from "../models/index.js";
+import { createInstallments, getInstallmentsPerYear } from "../utils/index.js";
 import {
   shareDetailsValidation,
   updateShareDetailValidation,
 } from "../validations/index.js";
-import {
-  checkDate,
-  createInstallments,
-  validateTotalAmount,
-  getInstallmentsPerYear,
-} from "../utils/index.js";
 
 export const createShareDetails = async (req, res) => {
   try {
