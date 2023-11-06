@@ -6,7 +6,7 @@ import shareHolderRouter from "./routes/shareHolders.js";
 import { connection } from "./config/database.js";
 
 const app = express();
-const port = process.env.PORT || 3000; // Use the environment port or 3000 by default
+const port = process.env.PORT || 5000; // Use the environment port or 3000 by default
 
 // Define middleware and routes
 // app.use(express.json());
