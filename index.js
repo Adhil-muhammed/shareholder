@@ -2,8 +2,9 @@
 import express from "express";
 import cors from "cors";
 import bodyParser from "body-parser";
-import shareHolderRouter from "./routes/shareHolders.js";
 import { connection } from "./config/database.js";
+import shareHolderRouter from "./routes/shareHolders.js";
+import { jwtAuthMiddleware } from "./controllers/authenticationControllers.js";
 
 const app = express();
 const port = process.env.PORT || 5000; // Use the environment port or 3000 by default
@@ -18,6 +19,7 @@ app.use(
 );
 
 app.use(bodyParser?.json());
+app.use(jwtAuthMiddleware);
 
 app.use("/api", shareHolderRouter);
 
