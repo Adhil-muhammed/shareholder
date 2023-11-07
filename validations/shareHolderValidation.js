@@ -12,6 +12,5 @@ export const shareholderValidationSchema = () => {
         "string.pattern.base": "Phone number must be a 10-digit number",
       }),
     country: Joi.string().optional(),
-    // Define other properties as needed
   });
 };
