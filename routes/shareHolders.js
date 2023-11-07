@@ -1,9 +1,10 @@
 import express from "express";
 import {
-  getShareDetail,
   createShareDetails,
   createShareholders,
   updateShareDetails,
+  getShareDetailByDate,
+  getShareDetailByShareholder,
 } from "../controllers/index.js";
 import { ShareDetail } from "../models/index.js";
 
@@ -17,35 +18,10 @@ router.post("/setShareDetails/:shareholderId", createShareDetails);
 
 router.put("/updateshareDetails/:shareDetailId", updateShareDetails);
 
-router.get("/share/:shareholderId/details", getShareDetail);
+router.get("/share/:shareholderId/details", getShareDetailByShareholder);
 
-// Route to display a summary list of all shareholders
-router.get("/shareholdersSummary", async (req, res) => {
-  const specificDate = new Date("2000-01-02T00:00:00.000Z");
-  const shareDetail = await ShareDetail.aggregate([
-    { $unwind: "$installments" }, // Unwind the installments array
-    {
-      $match: {
-        "installments.installmentDate": specificDate, // Filter by the specific date
-      },
-    },
-    {
-      $lookup: {
-        from: "shareholders", // Name of the Shareholder collection
-        localField: "shareholder",
-        foreignField: "_id",
-        as: "shareholderDetails",
-      },
-    },
-    {
-      $project: {
-        shareholder: { $arrayElemAt: ["$shareholderDetails", 0] }, // Consider the first element as the shareholder
-        installments: 1,
-      },
-    },
-  ]);
-  res.json(shareDetail).status(200);
-});
+// Route to display a summary list of all shareholders and their sharedetails
+router.get("/shareDetails", getShareDetailByDate);
 
 // Route to display details of an individual shareholder
 router.get("/shareholder/:shareholderId", (req, res) => {

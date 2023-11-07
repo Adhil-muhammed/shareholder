@@ -1,6 +1,7 @@
 export { createShareholders } from "./shareholderControllers.js";
 export {
-  getShareDetail,
   updateShareDetails,
   createShareDetails,
+  getShareDetailByDate,
+  getShareDetailByShareholder,
 } from "./shareDetailsControllers.js";

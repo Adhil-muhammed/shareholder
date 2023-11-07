@@ -101,7 +101,7 @@ export const updateShareDetails = async (req, res) => {
   }
 };
 
-export const getShareDetail = async (req, res) => {
+export const getShareDetailByShareholder = async (req, res) => {
   try {
     const { shareholderId } = req.params;
 
@@ -112,5 +112,48 @@ export const getShareDetail = async (req, res) => {
     res.status(200).json(shareDetails);
   } catch (error) {
     res.status(500).json({ error: "Server error" });
+  }
+};
+
+export const getShareDetailByDate = async (req, res) => {
+  try {
+    const dateSchema = Joi.string().isoDate().required();
+    const { error, value: filterDate } = dateSchema.validate(req?.query?.date);
+
+    if (error) {
+      return res.status(400).json({ error: error.details[0].message });
+    }
+
+    const shareDetail = await ShareDetail.aggregate([
+      { $unwind: "$installments" }, // Unwind the installments array
+      {
+        $match: {
+          "installments.installmentDate": new Date(filterDate), // Filter by the specific date
+        },
+      },
+      {
+        $lookup: {
+          from: "shareholders", // Name of the Shareholder collection
+          localField: "shareholder",
+          foreignField: "_id",
+          as: "shareholderDetails",
+        },
+      },
+      {
+        $project: {
+          shareholder: { $arrayElemAt: ["$shareholderDetails", 0] }, // Consider the first element as the shareholder
+          installments: 1,
+        },
+      },
+    ]);
+
+    if (shareDetail?.length) {
+      res.json(shareDetail).status(200);
+    } else {
+      res.json({ message: "No data found for the specific date" }).status(404);
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "An error occurred" });
   }
 };
