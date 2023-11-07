@@ -12,14 +12,9 @@ const port = process.env.PORT || 5000; // Use the environment port or 3000 by de
 // Define middleware and routes
 // app.use(express.json());
 
-app.use(
-  cors({
-    credentials: true,
-  })
-);
-
+app.use(cors({ credentials: true }));
 app.use(bodyParser?.json());
-app.use(jwtAuthMiddleware);
+// app.use(jwtAuthMiddleware);
 
 app.use("/api", shareHolderRouter);
 
