@@ -29,32 +29,27 @@ export const jwtAuthMiddleware = (req, res, next) => {
 export const login = async (req, res) => {
   const { username, password } = req.body;
   const user = await User.findOne({ username });
+  const passwordMatch = await bcrypt.compare(password, user.password);
 
   if (!user) {
     return res.status(401).json({ message: "Authentication failed" });
   }
 
-  const passwordMatch = await bcrypt.compare(password, user.password);
-
   if (!passwordMatch) {
     return res.status(401).json({ message: "Authentication failed" });
   }
 
-  // Generate a JWT token
   const token = jwt.sign(
     { username: user.username, userId: user._id },
-    tempKey, // Replace with a strong, unique secret key
+    tempKey,
     { expiresIn: "1h" }
   );
-
   res.status(200).json({ token });
 };
 
 export const signup = () => {
   router.post("/signup", async (req, res) => {
     const { username, password } = req.body;
-
-    // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Create a new user and save it to the database
