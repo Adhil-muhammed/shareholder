@@ -10,8 +10,8 @@ export const shareDetailsValidation = async () => {
       "any.required": "Duration is required",
     }),
     startDate: Joi.date().required().messages({
-      // "date.base": "Invalid date format for startDate",
       // "date.iso": "StartDate must be in ISO format",
+      // "date.base": "Invalid date format for startDate",
       "any.required": "StartDate is required",
     }),
     annualAmount: Joi.number().positive().required().messages({
