@@ -1,7 +1,9 @@
 // Import required modules and packages
-import express from "express";
 import cors from "cors";
+import express from "express";
 import bodyParser from "body-parser";
+import userRoutes from "./routes/user.js";
+import auth from "./routes/authentication.js";
 import { connection } from "./config/database.js";
 import shareHolderRouter from "./routes/shareHolders.js";
 import { jwtAuthMiddleware } from "./controllers/authenticationControllers.js";
@@ -14,9 +16,11 @@ const port = process.env.PORT || 5000; // Use the environment port or 3000 by de
 
 app.use(cors({ credentials: true }));
 app.use(bodyParser?.json());
-// app.use(jwtAuthMiddleware);
+app.use("/api", jwtAuthMiddleware);
 
-app.use("/api", shareHolderRouter);
+app.use("/auth", auth);
+app.use("/api/profile", userRoutes);
+app.use("/api/shareholder", shareHolderRouter);
 
 // connect database
 connection();

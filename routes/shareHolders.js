@@ -1,30 +1,29 @@
 import express from "express";
 import {
-  createShareDetails,
+  addShareDetailsToShareholder,
   createShareholders,
   updateShareDetails,
   getShareDetailByDate,
   getShareDetailByShareholder,
 } from "../controllers/index.js";
-import { ShareDetail } from "../models/index.js";
 
 const router = express?.Router();
 
 // Route to add shareholders to the system
-router.post("/addShareholder", createShareholders);
+router.post("/", createShareholders);
 
 // Route to set share details for a shareholder
-router.post("/setShareDetails/:shareholderId", createShareDetails);
+router.post("/setShareDetails/:shareholderId", addShareDetailsToShareholder);
 
-router.put("/updateshareDetails/:shareDetailId", updateShareDetails);
+router.put("/:shareDetailId", updateShareDetails);
 
-router.get("/share/:shareholderId/details", getShareDetailByShareholder);
+router.get("/shareDetails/:shareholderId", getShareDetailByShareholder);
 
 // Route to display a summary list of all shareholders and their sharedetails
-router.get("/shareDetails", getShareDetailByDate);
+router.get("/shareDetailsByDate", getShareDetailByDate);
 
 // Route to display details of an individual shareholder
-router.get("/shareholder/:shareholderId", (req, res) => {
+router.get("/:shareholderId", (req, res) => {
   // Implement logic to retrieve and return individual shareholder details
 });
 

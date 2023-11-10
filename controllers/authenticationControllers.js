@@ -14,15 +14,22 @@ export const jwtAuthMiddleware = (req, res, next) => {
       .json({ message: "Authentication failed (no token)" });
   }
   try {
-    // Verify the token using your secret key
-    const decoded = jwt.verify(token, tempKey);
-    // Attach user information to the request for use in protected routes
-    req.user = decoded;
+    jwt.verify(token, tempKey, (err, decoded) => {
+      if (err) {
+        if (err.name === "TokenExpiredError") {
+          return res.status(401).json({ message: "Token has expired" });
+        } else {
+          console.log("Token verification failed:", err.message);
+        }
+      } else {
+        req.user = decoded;
+      }
+    });
+
     next(); // Continue to the protected route if the token is valid
   } catch (error) {
-    return res
-      .status(401)
-      .json({ message: "Authentication failed (invalid token)" });
+    console.log("error: middlewer", error);
+    return res.status(500).json({ message: "server Authentication error" });
   }
 };
 
@@ -42,20 +49,18 @@ export const login = async (req, res) => {
   const token = jwt.sign(
     { username: user.username, userId: user._id },
     tempKey,
-    { expiresIn: "1h" }
+    { expiresIn: 3600 }
   );
   res.status(200).json({ token });
 };
 
-export const signup = () => {
-  router.post("/signup", async (req, res) => {
-    const { username, password } = req.body;
-    const hashedPassword = await bcrypt.hash(password, 10);
+export const signup = async (req, res) => {
+  const { username, password, email } = req.body;
+  const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Create a new user and save it to the database
-    const user = new User({ username, password: hashedPassword });
-    await user.save();
+  // Create a new user and save it to the database
+  const user = new User({ email, username, password: hashedPassword });
+  await user.save();
 
-    res.status(201).json({ message: "User created successfully" });
-  });
+  res.status(201).json({ message: "User created successfully" });
 };

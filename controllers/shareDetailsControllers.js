@@ -7,7 +7,7 @@ import {
   updateShareDetailValidation,
 } from "../validations/index.js";
 
-export const createShareDetails = async (req, res) => {
+export const addShareDetailsToShareholder = async (req, res) => {
   try {
     const { duration, startDate, annualAmount, installmentType } = req.body;
     const shareDetailvalidationSchema = await shareDetailsValidation();

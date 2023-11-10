@@ -1,8 +1,12 @@
 export { createShareholders } from "./shareholderControllers.js";
-export { login, jwtAuthMiddleware } from "./authenticationControllers.js";
+export {
+  login,
+  signup,
+  jwtAuthMiddleware,
+} from "./authenticationControllers.js";
 export {
   updateShareDetails,
-  createShareDetails,
   getShareDetailByDate,
   getShareDetailByShareholder,
+  addShareDetailsToShareholder,
 } from "./shareDetailsControllers.js";
