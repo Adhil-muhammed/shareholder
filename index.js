@@ -14,6 +14,9 @@ const port = process.env.PORT || 5000; // Use the environment port or 3000 by de
 // Define middleware and routes
 // app.use(express.json());
 
+// connect database
+connection();
+
 app.use(cors({ credentials: true }));
 app.use(bodyParser?.json());
 app.use("/api", jwtAuthMiddleware);
@@ -21,9 +24,6 @@ app.use("/api", jwtAuthMiddleware);
 app.use("/auth", auth);
 app.use("/api/profile", userRoutes);
 app.use("/api/shareholder", shareHolderRouter);
-
-// connect database
-connection();
 
 // Start the server
 app.listen(port, () => {
