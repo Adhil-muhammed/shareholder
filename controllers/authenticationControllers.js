@@ -17,16 +17,16 @@ export const jwtAuthMiddleware = (req, res, next) => {
     jwt.verify(token, tempKey, (err, decoded) => {
       if (err) {
         if (err.name === "TokenExpiredError") {
+          console.log("TokenExpiredError");
           return res.status(401).json({ message: "Token has expired" });
         } else {
           console.log("Token verification failed:", err.message);
         }
       } else {
         req.user = decoded;
+        next(); // Continue to the protected route if the token is valid
       }
     });
-
-    next(); // Continue to the protected route if the token is valid
   } catch (error) {
     console.log("error: middlewer", error);
     return res.status(500).json({ message: "server Authentication error" });
@@ -36,11 +36,12 @@ export const jwtAuthMiddleware = (req, res, next) => {
 export const login = async (req, res) => {
   const { username, password } = req.body;
   const user = await User.findOne({ username });
-  const passwordMatch = await bcrypt.compare(password, user.password);
 
   if (!user) {
     return res.status(401).json({ message: "Authentication failed" });
   }
+
+  const passwordMatch = await bcrypt.compare(password, user?.password);
 
   if (!passwordMatch) {
     return res.status(401).json({ message: "Authentication failed" });
