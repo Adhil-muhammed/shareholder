@@ -20,7 +20,7 @@ export const jwtAuthMiddleware = (req, res, next) => {
           console.log("TokenExpiredError");
           return res.status(401).json({ message: "Token has expired" });
         } else {
-          console.log("Token verification failed:", err.message);
+          return res.status(401).json({ message: err?.message });
         }
       } else {
         req.user = decoded;
