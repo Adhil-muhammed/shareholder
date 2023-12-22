@@ -27,3 +27,21 @@ export const createShareholders = async (req, res) => {
       .json({ error: "Failed to add shareholder", message: error?.message });
   }
 };
+
+export const getShareholders = async (req, res) => {
+  try {
+    const shareholders = await Shareholder?.find();
+    console.log("shareholders: ", shareholders);
+    if (!shareholders?.length) {
+      res
+        .status(200)
+        .json({ status: "No shareholder to list", message: error?.message });
+    }
+
+    res.status(200).json({ shareholders });
+  } catch (error) {
+    res
+      .status(400)
+      .json({ error: "Failed to list shareholders", message: error?.message });
+  }
+};

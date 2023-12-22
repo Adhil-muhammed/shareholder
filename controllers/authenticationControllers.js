@@ -38,13 +38,15 @@ export const login = async (req, res) => {
   const user = await User.findOne({ username });
 
   if (!user) {
-    return res.status(401).json({ message: "Authentication failed" });
+    return res
+      .status(401)
+      .json({ message: "Authentication failed. User not found" });
   }
 
   const passwordMatch = await bcrypt.compare(password, user?.password);
 
   if (!passwordMatch) {
-    return res.status(401).json({ message: "Authentication failed" });
+    return res.status(401).json({ message: "Authentication failed." });
   }
 
   const token = jwt.sign(

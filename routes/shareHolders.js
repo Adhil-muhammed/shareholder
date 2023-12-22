@@ -1,5 +1,6 @@
 import express from "express";
 import {
+  getShareholders,
   createShareholders,
   updateShareDetails,
   getShareDetailByDate,
@@ -11,6 +12,9 @@ const router = express?.Router();
 
 // Route to add shareholders to the system
 router.post("/", createShareholders);
+
+// list all shareholders
+router?.get("/", getShareholders);
 
 // Route to set share details for a shareholder
 router.post("/setShareDetails/:shareholderId", addShareDetailsToShareholder);

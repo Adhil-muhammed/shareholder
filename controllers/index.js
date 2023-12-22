@@ -1,4 +1,7 @@
-export { createShareholders } from "./shareholderControllers.js";
+export {
+  getShareholders,
+  createShareholders,
+} from "./shareholderControllers.js";
 export {
   login,
   signup,
