@@ -33,9 +33,7 @@ export const getShareholders = async (req, res) => {
     const shareholders = await Shareholder?.find();
     console.log("shareholders: ", shareholders);
     if (!shareholders?.length) {
-      res
-        .status(200)
-        .json({ status: "No shareholder to list", message: error?.message });
+      res.status(200).json({ status: "empty", message: error?.message });
     }
 
     res.status(200).json({ shareholders });

@@ -7,6 +7,16 @@ import {
   updateShareDetailValidation,
 } from "../validations/index.js";
 
+export const getAllShareDetails = async (req, res) => {
+  try {
+    const allShareDetails = await ShareDetail?.find();
+    if (!allShareDetails?.length) {
+      res?.status(200)?.json({ message: "can not find any shareHolder" });
+    }
+    res?.status(200)?.json({ allShareDetails, status: "ok" });
+  } catch (error) {}
+};
+
 export const addShareDetailsToShareholder = async (req, res) => {
   try {
     const { duration, startDate, annualAmount, installmentType } = req.body;

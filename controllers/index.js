@@ -8,6 +8,7 @@ export {
   jwtAuthMiddleware,
 } from "./authenticationControllers.js";
 export {
+  getAllShareDetails,
   updateShareDetails,
   getShareDetailByDate,
   getShareDetailByShareholder,

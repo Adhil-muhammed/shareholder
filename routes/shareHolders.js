@@ -2,6 +2,7 @@ import express from "express";
 import {
   getShareholders,
   createShareholders,
+  getAllShareDetails,
   updateShareDetails,
   getShareDetailByDate,
   getShareDetailByShareholder,
@@ -15,6 +16,9 @@ router.post("/", createShareholders);
 
 // list all shareholders
 router?.get("/", getShareholders);
+
+// get all share details
+router?.get("/getShareDetails", getAllShareDetails);
 
 // Route to set share details for a shareholder
 router.post("/setShareDetails/:shareholderId", addShareDetailsToShareholder);
